@@ -1,0 +1,10 @@
+n = 0:511;
+d = sin(.1*pi*n);
+v = 0.5 * randn(1, 512);
+x = d + v;
+rd = aasamplebiasedautoc(d, 20);
+rv = aasamplebiasedautoc(v, 20);
+R = toeplitz(rd(1, 1:12)) + toeplitz(rv(1, 1:12));
+pdx = rd(1, 1:12);
+w = inv(R) *pdx';
+y = filter(w', 1, x);
