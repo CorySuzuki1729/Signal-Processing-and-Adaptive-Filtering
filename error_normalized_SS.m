@@ -1,0 +1,48 @@
+clear all;
+randn('state',0);
+I = 200;
+LL = 1000;
+J = zeros(1,LL);
+Jminn = zeros(1,LL);
+Jex = zeros(1,LL);
+N = 4;
+NN = 10*N;
+h = [1 0.7 0.5 -0.2];
+for i=1:I
+    y = zeros(1,LL);
+    w = zeros(1,N);
+    e = zeros(1,LL);
+    X = zeros(N,1);
+    D = zeros(NN,1);
+    x = sqrt(1)*randn(1,LL);
+    denn = 0;
+    n = sqrt(0.09)*(randn(1,LL));
+    for k = 1:LL
+        dd = filter(h,1,x);
+        X = [x(k); X(1:N-1)];
+        den = X'*X;
+        y = w*X;
+        e(k) = dd(k) + n(k) - y;
+        mu1 = 0.8;
+        denn = denn + e(k)^2;
+        mu = (mu1/(1+mu1*denn));
+        w = w + mu*e(k)*X';
+        J(k) = J(k) + (abs(e(k)))^2;
+        Jminn(k) = Jminn(k) + n(k)^2;
+    end;
+end;
+J = J/I;
+Jmin1 = Jminn/I;
+Jmin = sum(Jmin1)/LL;
+Jex = J-Jmin;
+Jinf = (1/200)*sum(J(LL-199:LL));
+JSSdB = 10*log10(Jinf);
+Jexinf = abs(Jinf-Jmin);
+JexinfSSdB = 10*log10(Jexinf);
+MM = Jexinf/Jmin;
+Mpercent = MM*100;
+[mu1, Jinf, Jmin, JSSdB, JexinfSSdB, JexinfSSdB, Mpercent]
+nn = 0:LL-1;
+plot(nn, 10*log10(abs((J))));
+hold on;
+plot(nn, 10*log10(Jmin));
