@@ -1,0 +1,18 @@
+M = 32;
+I = 10;
+mu = 0.01;
+n = 0:999;
+d = sin(0.1*pi*n);
+v = 1.5*randn(1, 1000);
+x = d+v;
+[A] = aaftlms(x,d,M,I,mu);
+wn8 = ifft(A(8,:));
+yn8 = filter(wn8, 1, x);
+subplot(2,1,1);
+plot(x(1, 1:200));
+xlabel('n');
+ylabel('x(n)');
+subplot(2,1,2);
+plot(real(yn8(1,1:200)));
+xlabel('n');
+ylabel('y(n)');
